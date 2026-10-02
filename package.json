@@ -1,0 +1,18 @@
+{
+  "name": "qrdrop-generator",
+  "version": "1.0.0",
+  "description": "Minimalist QR Code Generator for photos, documents, links and text",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": ["qr", "generator", "minimalist", "stitch", "file-sharing"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.1"
+  }
+}

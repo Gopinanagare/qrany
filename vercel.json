@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/f/:id", "destination": "/mobile_preview.html" },
+    { "source": "/(.*)", "destination": "/$1" }
+  ]
+}

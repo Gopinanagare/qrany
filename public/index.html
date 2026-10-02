@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QRDrop • Instant File, Photo & Link QR Generator</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/style.css"/>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-tint": "#565e74",
+            "on-background": "#1a1b22",
+            "on-secondary": "#ffffff",
+            "on-tertiary": "#ffffff",
+            "background": "#fbf8ff",
+            "on-primary-container": "#7c839b",
+            "outline": "#76777d",
+            "surface-container-highest": "#e3e1ec",
+            "secondary-container": "#645efb",
+            "surface": "#fbf8ff",
+            "on-surface-variant": "#45464d",
+            "inverse-on-surface": "#f1effa",
+            "tertiary-fixed": "#6ffbbe",
+            "surface-container-lowest": "#ffffff",
+            "on-tertiary-fixed-variant": "#005236",
+            "on-error": "#ffffff",
+            "secondary": "#4b41e1",
+            "on-secondary-fixed": "#0f0069",
+            "on-error-container": "#93000a",
+            "primary-container": "#131b2e",
+            "error": "#ba1a1a",
+            "secondary-fixed": "#e2dfff",
+            "on-primary": "#ffffff",
+            "surface-container-high": "#e8e7f1",
+            "on-tertiary-fixed": "#002113",
+            "tertiary-container": "#002113",
+            "primary-fixed-dim": "#bec6e0",
+            "surface-bright": "#fbf8ff",
+            "inverse-primary": "#bec6e0",
+            "on-secondary-fixed-variant": "#3323cc",
+            "on-primary-fixed-variant": "#3f465c",
+            "surface-container": "#eeedf7",
+            "on-primary-fixed": "#131b2e",
+            "outline-variant": "#c6c6cd",
+            "surface-dim": "#dad9e3",
+            "error-container": "#ffdad6",
+            "surface-container-low": "#f4f2fd",
+            "primary-fixed": "#dae2fd",
+            "primary": "#000000",
+            "tertiary": "#000000",
+            "on-tertiary-container": "#009668",
+            "tertiary-fixed-dim": "#4edea3",
+            "on-secondary-container": "#fffbff",
+            "secondary-fixed-dim": "#c3c0ff",
+            "on-surface": "#1a1b22",
+            "inverse-surface": "#2f3038",
+            "surface-variant": "#e3e1ec"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          spacing: {
+            "gutter": "1.5rem",
+            "space-md": "0.75rem",
+            "margin": "2rem",
+            "space-sm": "0.5rem",
+            "space-lg": "1.25rem",
+            "gutter-sm": "1rem",
+            "space-xs": "0.25rem",
+            "margin-sm": "1rem",
+            "space-xl": "2rem"
+          },
+          fontFamily: {
+            "headline-md": [ "Plus Jakarta Sans", "sans-serif" ],
+            "body-md": [ "Inter", "sans-serif" ],
+            "body-lg": [ "Inter", "sans-serif" ],
+            "headline-lg": [ "Plus Jakarta Sans", "sans-serif" ],
+            "display-hero-mobile": [ "Plus Jakarta Sans", "sans-serif" ],
+            "label-mono-sm": [ "JetBrains Mono", "monospace" ],
+            "label-mono": [ "JetBrains Mono", "monospace" ],
+            "body-sm": [ "Inter", "sans-serif" ],
+            "ui-button": [ "Inter", "sans-serif" ],
+            "display-hero": [ "Plus Jakarta Sans", "sans-serif" ]
+          },
+          fontSize: {
+            "headline-md": [ "18px", { "lineHeight": "26px", "letterSpacing": "-0.015em", "fontWeight": "600" } ],
+            "body-md": [ "14px", { "lineHeight": "20px", "letterSpacing": "-0.005em", "fontWeight": "400" } ],
+            "body-lg": [ "16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400" } ],
+            "headline-lg": [ "24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600" } ],
+            "display-hero-mobile": [ "30px", { "lineHeight": "38px", "letterSpacing": "-0.025em", "fontWeight": "700" } ],
+            "label-mono-sm": [ "11px", { "lineHeight": "14px", "letterSpacing": "0em", "fontWeight": "400" } ],
+            "label-mono": [ "12px", { "lineHeight": "16px", "letterSpacing": "-0.01em", "fontWeight": "500" } ],
+            "body-sm": [ "12px", { "lineHeight": "16px", "fontWeight": "400" } ],
+            "ui-button": [ "13px", { "lineHeight": "18px", "letterSpacing": "-0.005em", "fontWeight": "500" } ],
+            "display-hero": [ "40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "700" } ]
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- QR Code Styling Library -->
+  <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.6.0-rc.1/lib/qr-code-styling.js"></script>
+  <!-- HTML5 QR Code Scanner Library -->
+  <script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+
+<body class="bg-surface dark:bg-slate-950 font-body-md text-on-surface dark:text-slate-100 antialiased min-h-screen transition-colors duration-200">
+  
+  <!-- Navigation Header -->
+  <header class="fixed top-0 left-0 w-full z-40 bg-surface/85 dark:bg-slate-950/85 backdrop-blur-xl border-b border-surface-container-high/60 dark:border-slate-800 shadow-[0_1px_8px_rgba(0,0,0,0.02)]">
+    <div class="h-16 max-w-[1200px] mx-auto px-gutter flex items-center justify-between gap-space-md">
+      
+      <!-- Brand Logo -->
+      <a href="/" class="flex items-center gap-space-sm cursor-pointer group">
+        <div class="w-8 h-8 rounded-lg bg-primary dark:bg-indigo-600 flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform">
+          <span class="material-symbols-outlined text-[18px]">qr_code_2</span>
+        </div>
+        <div class="flex items-center gap-space-xs">
+          <span class="font-headline-md text-headline-md text-on-surface dark:text-white font-bold tracking-tight">QRDrop</span>
+          <span class="font-label-mono-sm text-label-mono-sm bg-surface-container-high dark:bg-slate-800 text-on-surface-variant dark:text-slate-400 px-space-xs py-0.5 rounded-full font-medium">v2.4</span>
+        </div>
+      </a>
+
+      <!-- Center Segmented Nav -->
+      <nav class="hidden md:flex items-center p-1 bg-surface-container dark:bg-slate-900 rounded-full">
+        <button id="nav-btn-generator" onclick="switchNavMode('generator')" class="font-ui-button px-space-md py-1.5 rounded-full transition-all bg-surface-container-lowest dark:bg-slate-800 text-on-surface dark:text-white shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+          Generator
+        </button>
+        <button id="nav-btn-batch" onclick="openBatchModal()" class="font-ui-button text-ui-button px-space-md py-1.5 rounded-full text-on-surface-variant dark:text-slate-400 hover:text-on-surface dark:hover:text-white transition-all">
+          Batch QR
+        </button>
+        <button id="nav-btn-analytics" onclick="openAnalyticsModal()" class="font-ui-button text-ui-button px-space-md py-1.5 rounded-full text-on-surface-variant dark:text-slate-400 hover:text-on-surface dark:hover:text-white transition-all">
+          Analytics
+        </button>
+        <button id="nav-btn-api" onclick="openApiModal()" class="font-ui-button text-ui-button px-space-md py-1.5 rounded-full text-on-surface-variant dark:text-slate-400 hover:text-on-surface dark:hover:text-white transition-all">
+          API & Docs
+        </button>
+      </nav>
+
+      <!-- Right Header Actions -->
+      <div class="flex items-center gap-space-sm">
+        <!-- Scan QR Trigger -->
+        <button onclick="openScannerModal()" class="hidden sm:flex items-center gap-space-xs px-space-md py-1.5 rounded-lg bg-surface-container-lowest dark:bg-slate-900 border border-surface-container-high dark:border-slate-800 text-on-surface dark:text-slate-200 hover:bg-surface-container dark:hover:bg-slate-800 transition-colors shadow-sm" type="button" title="Scan QR with Camera or Image">
+          <span class="material-symbols-outlined text-[18px] text-secondary dark:text-indigo-400">photo_camera</span>
+          <span class="font-ui-button text-ui-button">Scan QR</span>
+        </button>
+
+        <!-- Command Palette Trigger -->
+        <button onclick="openCommandModal()" class="hidden lg:flex items-center gap-space-xs px-space-sm py-1.5 rounded-lg bg-surface-container dark:bg-slate-900 text-on-surface-variant dark:text-slate-400 hover:bg-surface-container-high dark:hover:bg-slate-800 hover:text-on-surface transition-colors" type="button">
+          <span class="material-symbols-outlined text-[16px]">search</span>
+          <kbd class="font-label-mono text-label-mono bg-surface-container-lowest dark:bg-slate-800 px-1 rounded border border-surface-container-high dark:border-slate-700">⌘K</kbd>
+        </button>
+
+        <!-- Light/Dark Mode Switcher -->
+        <button id="theme-toggle-btn" onclick="toggleDarkMode()" aria-label="Toggle color mode" class="w-8 h-8 rounded-lg bg-surface-container dark:bg-slate-900 border border-transparent dark:border-slate-800 flex items-center justify-center text-on-surface-variant dark:text-slate-300 hover:bg-surface-container-high dark:hover:bg-slate-800 transition-colors" type="button" title="Toggle Theme">
+          <span class="material-symbols-outlined text-[18px]" id="theme-icon">light_mode</span>
+        </button>
+
+        <!-- Export All Button -->
+        <button onclick="exportCurrentQR()" class="flex items-center gap-space-xs px-space-md py-1.5 rounded-lg bg-primary dark:bg-indigo-600 text-on-primary hover:bg-surface-tint dark:hover:bg-indigo-500 transition-all shadow-sm" type="button">
+          <span class="material-symbols-outlined text-[16px]">ios_share</span>
+          <span class="font-ui-button text-ui-button">Export QR</span>
+        </button>
+
+        <!-- User / Network Indicator -->
+        <div id="network-status-badge" class="w-8 h-8 rounded-full bg-surface-container dark:bg-slate-800 border border-surface-container-high dark:border-slate-700 flex items-center justify-center ml-space-xs cursor-pointer" onclick="checkNetworkInfo()" title="Local Network Active">
+          <span class="material-symbols-outlined text-[18px] text-emerald-500">wifi</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Application Body -->
+  <main class="w-full pt-20 bg-surface dark:bg-slate-950 min-h-[calc(100vh-4rem)]">
+    <div class="flex flex-col w-full">
+
+      <!-- Minimalist Context Section -->
+      <section class="max-w-[1180px] w-full mx-auto px-gutter pt-space-lg pb-space-md">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+          <div>
+            <div class="inline-flex items-center gap-space-xs px-2.5 py-1 rounded-full bg-surface-container-high dark:bg-slate-900 border border-surface-container dark:border-slate-800 mb-space-sm">
+              <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary-container opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-secondary dark:bg-indigo-400"></span>
+              </span>
+              <span class="font-label-mono text-label-mono text-on-surface-variant dark:text-slate-400">
+                Instant File & URL to QR • Ready to encode
+              </span>
+            </div>
+            <h1 class="font-display-hero text-display-hero text-on-surface dark:text-white tracking-tight">
+              Drop anything. Get your QR in seconds.
+            </h1>
+            <p class="font-body-lg text-body-lg text-on-surface-variant dark:text-slate-400 max-w-2xl mt-1">
+              Upload documents, imagery, or paste links to construct high-res vector QRs with zero telemetry and instant offline scanning.
+            </p>
+          </div>
+
+          <!-- Status Indicator Pills -->
+          <div class="flex items-center gap-space-sm bg-surface-container-lowest dark:bg-slate-900 p-1.5 rounded-xl border border-surface-container-high dark:border-slate-800 shadow-sm self-start md:self-auto">
+            <div class="flex items-center gap-1.5 px-3 py-1 bg-surface-container dark:bg-slate-800 rounded-lg">
+              <span class="material-symbols-outlined text-[15px] text-emerald-500">verified</span>
+              <span class="font-label-mono-sm text-label-mono-sm text-on-surface dark:text-slate-200">Client Engine Active</span>
+            </div>
+            <div class="flex items-center gap-1.5 px-3 py-1 bg-surface-container dark:bg-slate-800 rounded-lg">
+              <span class="material-symbols-outlined text-[15px] text-secondary dark:text-indigo-400">memory</span>
+              <span class="font-label-mono-sm text-label-mono-sm text-on-surface-variant dark:text-slate-400" id="latency-indicator">&lt; 12ms Encode</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Primary Workspace Canvas (60 / 40 Split) -->
+      <section class="max-w-[1180px] w-full mx-auto px-gutter py-space-sm pb-space-xl">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+          
+          <!-- LEFT COLUMN: Input Workbench (7 Cols) -->
+          <div class="lg:col-span-7 flex flex-col gap-space-md">
+            
+            <!-- Segmented Tab Navigation -->
+            <div class="bg-surface-container-low dark:bg-slate-900 p-1.5 rounded-xl flex items-center gap-1 shadow-sm border border-surface-container dark:border-slate-800">
+              <button class="tab-btn flex-1 flex items-center justify-center gap-space-xs py-2 px-space-sm rounded-lg font-ui-button text-ui-button transition-all bg-surface-container-lowest dark:bg-slate-800 text-on-surface dark:text-white shadow-sm" id="tab-doc" onclick="switchTab('doc')">
+                <span class="material-symbols-outlined text-[17px]">description</span>
+                <span>Document / PDF</span>
+              </button>
+              <button class="tab-btn flex-1 flex items-center justify-center gap-space-xs py-2 px-space-sm rounded-lg font-ui-button text-ui-button transition-all text-on-surface-variant dark:text-slate-400 hover:text-on-surface dark:hover:text-white" id="tab-url" onclick="switchTab('url')">
+                <span class="material-symbols-outlined text-[17px]">link</span>
+                <span>URL / Link</span>
+              </button>
+              <button class="tab-btn flex-1 flex items-center justify-center gap-space-xs py-2 px-space-sm rounded-lg font-ui-button text-ui-button transition-all text-on-surface-variant dark:text-slate-400 hover:text-on-surface dark:hover:text-white" id="tab-photo" onclick="switchTab('photo')">
+                <span class="material-symbols-outlined text-[17px]">photo_library</span>
+                <span>Photo / Image</span>
+              </button>
+              <button class="tab-btn flex-1 flex items-center justify-center gap-space-xs py-2 px-space-sm rounded-lg font-ui-button text-ui-button transition-all text-on-surface-variant dark:text-slate-400 hover:text-on-surface dark:hover:text-white" id="tab-text" onclick="switchTab('text')">
+                <span class="material-symbols-outlined text-[17px]">notes</span>
+                <span>Plain Text</span>
+              </button>
+            </div>
+
+            <!-- Input Area Container Card -->
+            <div class="bg-surface-container-lowest dark:bg-slate-900 rounded-xl p-space-lg shadow-sm border border-surface-container-high/80 dark:border-slate-800 flex flex-col gap-space-md relative overflow-hidden">
+              
+              <!-- 1. Document / File Upload View (Active by default) -->
+              <div class="flex flex-col gap-space-md" id="view-doc">
+                <div class="rounded-xl p-space-lg flex flex-col items-center justify-center text-center bg-surface-container-low dark:bg-slate-800/60 border-2 border-dashed border-outline-variant/60 dark:border-slate-700 transition-all cursor-pointer group hover:bg-surface-container dark:hover:bg-slate-800" 
+                     id="dropzone-doc" 
+                     onclick="document.getElementById('file-selector-doc').click()"
+                     ondragover="handleDragOver(event, this)" 
+                     ondragleave="handleDragLeave(event, this)" 
+                     ondrop="handleFileDrop(event, 'doc')">
+                  
+                  <div class="w-12 h-12 rounded-xl bg-secondary-fixed dark:bg-indigo-900/50 flex items-center justify-center text-secondary dark:text-indigo-400 mb-space-sm group-hover:scale-110 transition-transform">
+                    <span class="material-symbols-outlined text-[24px]">cloud_upload</span>
+                  </div>
+                  <p class="font-headline-md text-headline-md text-on-surface dark:text-white">
+                    Drag and drop your document here, or <span class="text-secondary dark:text-indigo-400 underline underline-offset-4 decoration-secondary/40">browse files</span>
+                  </p>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant dark:text-slate-400 mt-1">
+                    PDF, DOCX, CSV, TXT, PPTX up to 100MB • Scannable on any device
+                  </p>
+                  <input class="hidden" id="file-selector-doc" onchange="fileSelected(this, 'doc')" type="file" accept=".pdf,.doc,.docx,.csv,.xlsx,.txt,.zip,.json,.ppt,.pptx"/>
+                </div>
+
+                <!-- Document Uploaded Item Status Card -->
+                <div id="file-status-card-doc" class="bg-surface-container-low dark:bg-slate-800/80 rounded-xl p-space-md flex items-center justify-between border border-surface-container-high dark:border-slate-700/60 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+                  <div class="flex items-center gap-space-sm min-w-0">
+                    <div class="w-10 h-10 rounded-lg bg-surface-container-high dark:bg-slate-700 flex items-center justify-center text-secondary dark:text-indigo-400 shrink-0">
+                      <span class="material-symbols-outlined text-[22px]" id="doc-file-icon">picture_as_pdf</span>
+                    </div>
+                    <div class="flex flex-col min-w-0">
+                      <div class="flex items-center gap-2">
+                        <span class="font-ui-button text-ui-button text-on-surface dark:text-white truncate max-w-[240px] sm:max-w-[340px]" id="active-file-name-doc">Product_Catalog_2025.pdf</span>
+                        <span class="font-label-mono-sm text-label-mono-sm px-1.5 py-0.5 rounded bg-surface-container-high dark:bg-slate-700 text-on-surface-variant dark:text-slate-300" id="active-file-size-doc">3.4 MB</span>
+                      </div>
+                      <div class="flex items-center gap-1.5 mt-0.5">
+                        <span class="material-symbols-outlined text-[14px] text-emerald-500">check_circle</span>
+                        <span class="font-label-mono-sm text-label-mono-sm text-emerald-600 dark:text-emerald-400" id="active-file-status-doc">Hosted on Local Wi-Fi CDN • Ready to Scan</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-1 shrink-0">
+                    <button class="p-1.5 rounded-lg text-on-surface-variant dark:text-slate-400 hover:text-on-surface hover:bg-surface-container-high dark:hover:bg-slate-700 transition-colors" onclick="document.getElementById('file-selector-doc').click()" title="Replace file">
+                      <span class="material-symbols-outlined text-[18px]">swap_horiz</span>
+                    </button>
+                    <button class="p-1.5 rounded-lg text-error hover:bg-error-container/40 dark:hover:bg-red-900/30 transition-colors" onclick="clearFile('doc')" title="Clear file">
+                      <span class="material-symbols-outlined text-[18px]">close</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Network Sharing Options Pill -->
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-2 p-2.5 rounded-xl bg-surface-container/60 dark:bg-slate-800/40 border border-surface-container-high dark:border-slate-800 text-xs">
+                  <div class="flex items-center gap-2 text-on-surface-variant dark:text-slate-400">
+                    <span class="material-symbols-outlined text-[16px] text-secondary dark:text-indigo-400">router</span>
+                    <span>Target Network: <strong class="text-on-surface dark:text-slate-200" id="network-ip-display">Local Wi-Fi</strong></span>
+                  </div>
+                  <div class="flex items-center gap-1 font-label-mono-sm">
+                    <button id="share-mode-local" onclick="setShareMode('local')" class="px-2.5 py-1 rounded-lg bg-surface-container-lowest dark:bg-slate-800 text-on-surface dark:text-white shadow-sm font-semibold">Local Wi-Fi</button>
+                    <button id="share-mode-cloud" onclick="setShareMode('cloud')" class="px-2.5 py-1 rounded-lg text-on-surface-variant dark:text-slate-400 hover:text-on-surface dark:hover:text-white">Public Cloud</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 2. URL / Direct Link View -->
+              <div class="hidden flex-col gap-space-sm" id="view-url">
+                <label class="font-label-mono text-label-mono text-on-surface-variant dark:text-slate-400">Destination URL</label>
+                <div class="flex items-center gap-space-xs bg-surface-container-low dark:bg-slate-800/80 px-space-md py-1.5 rounded-xl border border-surface-container-high dark:border-slate-700">
+                  <span class="material-symbols-outlined text-on-surface-variant dark:text-slate-400 text-[18px]">globe</span>
+                  <input class="w-full bg-transparent font-label-mono text-label-mono text-on-surface dark:text-white focus:outline-none placeholder:text-outline dark:placeholder:text-slate-500 py-1" 
+                         id="url-input" 
+                         oninput="updateUrlTarget(this.value)" 
+                         placeholder="https://example.com/target" 
+                         type="url" 
+                         value="https://mywebsite.com/presentation"/>
+                  <button class="p-1 rounded text-on-surface-variant dark:text-slate-400 hover:text-on-surface dark:hover:text-white" onclick="document.getElementById('url-input').value=''; updateUrlTarget('')" title="Clear">
+                    <span class="material-symbols-outlined text-[16px]">close</span>
+                  </button>
+                  <button class="px-space-sm py-1 bg-surface-container-lowest dark:bg-slate-700 font-ui-button text-ui-button text-on-surface dark:text-white rounded-lg shadow-sm hover:bg-surface-container-high dark:hover:bg-slate-600 shrink-0 transition-colors" onclick="testUrlLink()">
+                    Test Link
+                  </button>
+                </div>
+                <div class="flex items-center gap-1.5 text-xs text-on-surface-variant dark:text-slate-400 mt-1">
+                  <span class="material-symbols-outlined text-[14px] text-emerald-500">lock</span>
+                  <span>Direct QR redirect • Instant scanning without proxy delay</span>
+                </div>
+              </div>
+
+              <!-- 3. Photo / Image View -->
+              <div class="hidden flex-col gap-space-sm" id="view-photo">
+                <div class="rounded-xl p-space-lg flex flex-col items-center justify-center text-center bg-surface-container-low dark:bg-slate-800/60 border-2 border-dashed border-outline-variant/60 dark:border-slate-700 transition-all cursor-pointer group hover:bg-surface-container dark:hover:bg-slate-800" 
+                     id="dropzone-photo" 
+                     onclick="document.getElementById('file-selector-photo').click()"
+                     ondragover="handleDragOver(event, this)" 
+                     ondragleave="handleDragLeave(event, this)" 
+                     ondrop="handleFileDrop(event, 'photo')">
+                  
+                  <div class="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/40 flex items-center justify-center text-purple-600 dark:text-purple-400 mb-space-sm group-hover:scale-110 transition-transform">
+                    <span class="material-symbols-outlined text-[24px]">add_photo_alternate</span>
+                  </div>
+                  <p class="font-headline-md text-headline-md text-on-surface dark:text-white">
+                    Drag and drop your photo here, or <span class="text-purple-600 dark:text-purple-400 underline underline-offset-4">browse photos</span>
+                  </p>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant dark:text-slate-400 mt-1">
+                    JPG, PNG, WEBP, GIF, SVG up to 50MB • Direct high-res photo viewer
+                  </p>
+                  <input class="hidden" id="file-selector-photo" onchange="fileSelected(this, 'photo')" type="file" accept="image/*"/>
+                </div>
+
+                <!-- Photo Preview Card -->
+                <div id="file-status-card-photo" class="bg-surface-container-low dark:bg-slate-800/80 rounded-xl p-space-md flex items-center justify-between border border-surface-container-high dark:border-slate-700/60 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+                  <div class="flex items-center gap-space-sm min-w-0">
+                    <div class="w-12 h-12 rounded-lg bg-surface-container-high dark:bg-slate-700 overflow-hidden shrink-0 border border-slate-200 dark:border-slate-700 flex items-center justify-center">
+                      <img id="photo-thumb-preview" src="/screen_80f84121.png" alt="Preview" class="w-full h-full object-cover"/>
+                    </div>
+                    <div class="flex flex-col min-w-0">
+                      <div class="flex items-center gap-2">
+                        <span class="font-ui-button text-ui-button text-on-surface dark:text-white truncate max-w-[240px] sm:max-w-[340px]" id="active-file-name-photo">Event_Poster_HiRes.png</span>
+                        <span class="font-label-mono-sm text-label-mono-sm px-1.5 py-0.5 rounded bg-surface-container-high dark:bg-slate-700 text-on-surface-variant dark:text-slate-300" id="active-file-size-photo">1.2 MB</span>
+                      </div>
+                      <div class="flex items-center gap-1.5 mt-0.5">
+                        <span class="material-symbols-outlined text-[14px] text-emerald-500">check_circle</span>
+                        <span class="font-label-mono-sm text-label-mono-sm text-emerald-600 dark:text-emerald-400" id="active-file-status-photo">Photo uploaded • Direct mobile gallery view ready</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-1 shrink-0">
+                    <button class="p-1.5 rounded-lg text-on-surface-variant dark:text-slate-400 hover:text-on-surface hover:bg-surface-container-high dark:hover:bg-slate-700 transition-colors" onclick="document.getElementById('file-selector-photo').click()" title="Replace photo">
+                      <span class="material-symbols-outlined text-[18px]">swap_horiz</span>
+                    </button>
+                    <button class="p-1.5 rounded-lg text-error hover:bg-error-container/40 dark:hover:bg-red-900/30 transition-colors" onclick="clearFile('photo')" title="Clear photo">
+                      <span class="material-symbols-outlined text-[18px]">close</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 4. Plain Text View -->
+              <div class="hidden flex-col gap-space-sm" id="view-text">
+                <div class="flex items-center justify-between">
+                  <label class="font-label-mono text-label-mono text-on-surface-variant dark:text-slate-400">Plain Text / Wi-Fi / Note Payload</label>
+                  <span class="font-label-mono-sm text-label-mono-sm text-on-surface-variant dark:text-slate-400" id="text-char-count">0 chars</span>
+                </div>
+                <textarea class="w-full bg-surface-container-low dark:bg-slate-800/80 p-space-md rounded-xl font-label-mono text-label-mono text-on-surface dark:text-white border border-surface-container-high dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-secondary/40 resize-none transition-all" 
+                          id="text-input" 
+                          oninput="updateTextTarget(this.value)" 
+                          placeholder="Type Wi-Fi credentials (e.g. WIFI:S:OfficeNetwork;T:WPA;P:SecretKey;;), raw Markdown, cryptographic signatures, or quick contact notes..." 
+                          rows="4"></textarea>
+                <div class="flex items-center gap-2 pt-1">
+                  <button type="button" onclick="insertWifiTemplate()" class="font-label-mono-sm text-xs bg-surface-container-high dark:bg-slate-800 text-on-surface-variant dark:text-slate-300 px-2.5 py-1 rounded-lg hover:text-on-surface transition-colors">
+                    + Wi-Fi Template
+                  </button>
+                  <button type="button" onclick="insertVCardTemplate()" class="font-label-mono-sm text-xs bg-surface-container-high dark:bg-slate-800 text-on-surface-variant dark:text-slate-300 px-2.5 py-1 rounded-lg hover:text-on-surface transition-colors">
+                    + Contact vCard
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Customization Matrix (Accordion) -->
+            <div class="bg-surface-container-lowest dark:bg-slate-900 rounded-xl p-space-lg shadow-sm border border-surface-container-high/80 dark:border-slate-800 flex flex-col gap-space-md">
+              <div class="flex items-center justify-between cursor-pointer select-none" onclick="toggleCustomizer()">
+                <div class="flex items-center gap-space-xs">
+                  <span class="material-symbols-outlined text-[20px] text-secondary dark:text-indigo-400">tune</span>
+                  <span class="font-headline-md text-headline-md text-on-surface dark:text-white">QR Appearance & Precision</span>
+                </div>
+                <span class="material-symbols-outlined text-[20px] text-on-surface-variant dark:text-slate-400 transition-transform duration-200" id="accordion-icon">expand_more</span>
+              </div>
+
+              <div class="flex flex-col gap-space-md pt-space-xs" id="customizer-body">
+                
+                <!-- Dot Geometry & Pattern -->
+                <div>
+                  <label class="font-label-mono text-label-mono text-on-surface-variant dark:text-slate-400 block mb-2">DOT GEOMETRY & PATTERN</label>
+                  <div class="grid grid-cols-3 gap-space-sm">
+                    <button class="pattern-opt p-space-sm rounded-xl bg-surface-container dark:bg-slate-800 border border-surface-container-high dark:border-slate-700 flex items-center gap-space-xs text-on-surface dark:text-white transition-all" onclick="setPattern('dots', this)" type="button">
+                      <div class="w-3.5 h-3.5 rounded-full bg-primary dark:bg-white shrink-0"></div>
+                      <span class="font-ui-button text-ui-button">Rounded Dots</span>
+                    </button>
+                    <button class="pattern-opt p-space-sm rounded-xl bg-surface-container-low dark:bg-slate-800/40 hover:bg-surface-container dark:hover:bg-slate-800 flex items-center gap-space-xs text-on-surface-variant dark:text-slate-400 transition-all" onclick="setPattern('square', this)" type="button">
+                      <div class="w-3.5 h-3.5 rounded-none bg-primary dark:bg-white shrink-0"></div>
+                      <span class="font-ui-button text-ui-button">Classic Square</span>
+                    </button>
+                    <button class="pattern-opt p-space-sm rounded-xl bg-surface-container-low dark:bg-slate-800/40 hover:bg-surface-container dark:hover:bg-slate-800 flex items-center gap-space-xs text-on-surface-variant dark:text-slate-400 transition-all" onclick="setPattern('rounded', this)" type="button">
+                      <div class="w-3.5 h-3.5 rounded-md bg-primary dark:bg-white shrink-0"></div>
+                      <span class="font-ui-button text-ui-button">Smooth Blobs</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Foreground Palette -->
+                <div>
+                  <label class="font-label-mono text-label-mono text-on-surface-variant dark:text-slate-400 block mb-2">FOREGROUND PALETTE</label>
+                  <div class="flex items-center gap-space-sm flex-wrap">
+                    <button class="color-opt w-8 h-8 rounded-full bg-black ring-2 ring-primary dark:ring-white ring-offset-2 dark:ring-offset-slate-900 transition-transform scale-105" onclick="setColor('#000000', this)" title="Obsidian Black"></button>
+                    <button class="color-opt w-8 h-8 rounded-full bg-[#4b41e1] transition-transform hover:scale-105" onclick="setColor('#4b41e1', this)" title="Electric Indigo"></button>
+                    <button class="color-opt w-8 h-8 rounded-full bg-[#005236] transition-transform hover:scale-105" onclick="setColor('#005236', this)" title="Forest Green"></button>
+                    <button class="color-opt w-8 h-8 rounded-full bg-[#ba1a1a] transition-transform hover:scale-105" onclick="setColor('#ba1a1a', this)" title="Crimson Core"></button>
+                    
+                    <div class="h-6 w-px bg-surface-container-high dark:bg-slate-700 mx-1"></div>
+                    
+                    <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-container-low dark:bg-slate-800 border border-surface-container-high dark:border-slate-700">
+                      <span class="font-label-mono-sm text-label-mono-sm text-on-surface-variant dark:text-slate-400">HEX</span>
+                      <input class="w-20 bg-transparent font-label-mono-sm text-label-mono-sm text-on-surface dark:text-white uppercase focus:outline-none" 
+                             id="hex-input" 
+                             onchange="setColor(this.value, null)" 
+                             type="text" 
+                             value="#000000"/>
+                      <input type="color" id="native-color-picker" oninput="setColor(this.value, null)" class="w-5 h-5 rounded cursor-pointer border-none bg-transparent"/>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Error Correction & Center Logo Switch -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md pt-space-xs">
+                  <div class="flex flex-col gap-1.5">
+                    <label class="font-label-mono text-label-mono text-on-surface-variant dark:text-slate-400">ERROR CORRECTION (ECC)</label>
+                    <div class="flex bg-surface-container-low dark:bg-slate-800 p-1 rounded-lg border border-surface-container-high dark:border-slate-700">
+                      <button class="ecc-btn flex-1 py-1 text-center font-label-mono-sm text-label-mono-sm rounded text-on-surface-variant dark:text-slate-400" onclick="setECC('L', this)">L (7%)</button>
+                      <button class="ecc-btn flex-1 py-1 text-center font-label-mono-sm text-label-mono-sm rounded text-on-surface-variant dark:text-slate-400" onclick="setECC('M', this)">M (15%)</button>
+                      <button class="ecc-btn flex-1 py-1 text-center font-label-mono-sm text-label-mono-sm rounded text-on-surface-variant dark:text-slate-400" onclick="setECC('Q', this)">Q (25%)</button>
+                      <button class="ecc-btn flex-1 py-1 text-center font-label-mono-sm text-label-mono-sm rounded bg-surface-container-lowest dark:bg-slate-700 text-on-surface dark:text-white shadow-sm font-semibold" onclick="setECC('H', this)">H (30%)</button>
+                    </div>
+                  </div>
+
+                  <div class="flex flex-col gap-1.5">
+                    <label class="font-label-mono text-label-mono text-on-surface-variant dark:text-slate-400">EMBEDDED LOGO / BADGE</label>
+                    <div class="flex items-center justify-between bg-surface-container-low dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-surface-container-high dark:border-slate-700">
+                      <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[18px] text-on-surface-variant dark:text-slate-400">bolt</span>
+                        <span class="font-ui-button text-ui-button text-on-surface dark:text-slate-200">Center Watermark</span>
+                      </div>
+                      <label class="relative inline-flex items-center cursor-pointer">
+                        <input checked="" class="sr-only peer" id="logo-toggle" onchange="toggleLogo(this.checked)" type="checkbox"/>
+                        <div class="w-9 h-5 bg-surface-container-highest dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-secondary dark:peer-checked:bg-indigo-600"></div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT COLUMN: Sticky Reactive QR Deck (5 Cols) -->
+          <div class="lg:col-span-5 lg:sticky lg:top-24 flex flex-col gap-space-md">
+            <div id="print-area" class="bg-surface-container-lowest dark:bg-slate-900 rounded-2xl p-space-lg shadow-xl border border-surface-container-high/80 dark:border-slate-800 relative overflow-hidden flex flex-col items-center">
+              
+              <!-- Top Metatags -->
+              <div class="w-full flex items-center justify-between pb-space-sm border-b border-surface-container-high/60 dark:border-slate-800">
+                <span class="flex items-center gap-1.5 font-label-mono-sm text-label-mono-sm px-2.5 py-0.5 rounded-full bg-secondary-fixed dark:bg-indigo-900/50 text-on-secondary-fixed dark:text-indigo-300 font-medium">
+                  <span class="w-1.5 h-1.5 rounded-full bg-secondary dark:bg-indigo-400 inline-block animate-pulse"></span>
+                  LIVE PREVIEW
+                </span>
+                <span class="font-label-mono-sm text-label-mono-sm text-on-surface-variant dark:text-slate-400">Dynamic QR • Vector Scalable</span>
+              </div>
+
+              <!-- Canvas QR Display Card -->
+              <div class="relative my-space-sm p-space-lg rounded-2xl bg-surface dark:bg-slate-950/60 shadow-[inset_0_0_12px_rgba(0,0,0,0.02)] flex flex-col items-center group w-full">
+                
+                <!-- Main QR Canvas Rendering Wrapper -->
+                <div class="relative w-64 h-64 bg-surface-container-lowest dark:bg-slate-900 rounded-xl p-4 shadow-sm border border-surface-container-high dark:border-slate-800 flex items-center justify-center transition-all duration-300" id="qr-wrapper">
+                  <!-- Real QR Canvas Container -->
+                  <div id="qr-code-canvas" class="w-full h-full flex items-center justify-center"></div>
+
+                  <!-- Central Badge Overlay -->
+                  <div class="absolute w-11 h-11 rounded-xl bg-surface-container-lowest dark:bg-slate-800 shadow-md flex items-center justify-center p-1 border-2 border-surface dark:border-slate-950 transition-opacity" id="center-badge">
+                    <div class="w-full h-full rounded-lg bg-primary dark:bg-indigo-600 flex items-center justify-center text-on-primary">
+                      <span class="material-symbols-outlined text-[18px]">bolt</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Instant Hover Scrim Tooltip -->
+                <div class="flex items-center gap-1.5 mt-3 text-on-surface-variant dark:text-slate-400 font-label-mono-sm text-label-mono-sm">
+                  <span class="material-symbols-outlined text-[14px] text-secondary dark:text-indigo-400">smartphone</span>
+                  <span>Point your camera to test scanning now</span>
+                </div>
+              </div>
+
+              <!-- Target & Spec Meta Info Box -->
+              <div class="w-full bg-surface-container-low dark:bg-slate-800/80 rounded-xl p-space-sm flex items-center justify-between gap-space-sm border border-surface-container-high dark:border-slate-700">
+                <div class="flex items-center gap-2 min-w-0">
+                  <span class="material-symbols-outlined text-[18px] text-secondary dark:text-indigo-400 shrink-0">cloud_done</span>
+                  <div class="flex flex-col min-w-0">
+                    <span class="font-label-mono-sm text-label-mono-sm text-on-surface-variant dark:text-slate-400">Live Scannable Endpoint</span>
+                    <span class="font-label-mono text-label-mono text-on-surface dark:text-slate-200 truncate" id="endpoint-string">http://localhost:3000/f/catalog</span>
+                  </div>
+                </div>
+                <button class="p-1.5 rounded-lg bg-surface-container-lowest dark:bg-slate-700 hover:bg-surface-container-high dark:hover:bg-slate-600 transition-colors text-on-surface dark:text-white shadow-sm shrink-0" onclick="copyEndpoint()" title="Copy URL">
+                  <span class="material-symbols-outlined text-[16px]" id="copy-icon">content_copy</span>
+                </button>
+              </div>
+
+              <!-- Primary CTAs & Format Split Button -->
+              <div class="w-full flex flex-col gap-space-xs mt-space-md no-print">
+                <div class="flex items-stretch gap-1">
+                  <button class="flex-1 bg-primary dark:bg-indigo-600 text-on-primary font-ui-button text-ui-button py-2.5 px-space-md rounded-xl hover:bg-surface-tint dark:hover:bg-indigo-500 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-sm" onclick="triggerDownload('PNG')">
+                    <span class="material-symbols-outlined text-[18px]">download</span>
+                    <span id="download-btn-text">Download High-Res QR</span>
+                  </button>
+                  <div class="relative">
+                    <button class="h-full bg-primary dark:bg-indigo-600 text-on-primary px-3 rounded-xl hover:bg-surface-tint dark:hover:bg-indigo-500 flex items-center justify-center transition-all" id="format-btn" onclick="toggleFormatMenu()">
+                      <span class="material-symbols-outlined text-[18px]">arrow_drop_down</span>
+                    </button>
+                    <!-- Format Dropdown Menu -->
+                    <div class="hidden absolute right-0 bottom-full mb-1 w-44 bg-surface-container-lowest dark:bg-slate-800 rounded-xl shadow-xl py-1 z-30 border border-surface-container-high dark:border-slate-700" id="format-menu">
+                      <button class="w-full px-3 py-2 text-left font-label-mono text-label-mono text-on-surface dark:text-slate-200 hover:bg-surface-container dark:hover:bg-slate-700 flex items-center justify-between" onclick="triggerDownload('PNG')">
+                        <span>PNG (Raster)</span>
+                        <span class="text-on-surface-variant dark:text-slate-400 font-label-mono-sm">4K HQ</span>
+                      </button>
+                      <button class="w-full px-3 py-2 text-left font-label-mono text-label-mono text-on-surface dark:text-slate-200 hover:bg-surface-container dark:hover:bg-slate-700 flex items-center justify-between" onclick="triggerDownload('SVG')">
+                        <span>SVG (Vector)</span>
+                        <span class="text-on-surface-variant dark:text-slate-400 font-label-mono-sm">Scalable</span>
+                      </button>
+                      <button class="w-full px-3 py-2 text-left font-label-mono text-label-mono text-on-surface dark:text-slate-200 hover:bg-surface-container dark:hover:bg-slate-700 flex items-center justify-between" onclick="triggerDownload('PDF')">
+                        <span>PDF Print</span>
+                        <span class="text-on-surface-variant dark:text-slate-400 font-label-mono-sm">CMYK</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Quick Sub-Actions -->
+                <div class="grid grid-cols-3 gap-1.5 pt-1">
+                  <button class="py-2 px-space-xs rounded-xl bg-surface-container-low dark:bg-slate-800 hover:bg-surface-container dark:hover:bg-slate-700 text-on-surface dark:text-slate-200 font-ui-button text-ui-button transition-colors flex items-center justify-center gap-1.5 border border-surface-container-high dark:border-slate-700" onclick="copyImageClip()">
+                    <span class="material-symbols-outlined text-[16px]">file_copy</span>
+                    <span>Copy</span>
+                  </button>
+                  <button class="py-2 px-space-xs rounded-xl bg-surface-container-low dark:bg-slate-800 hover:bg-surface-container dark:hover:bg-slate-700 text-on-surface dark:text-slate-200 font-ui-button text-ui-button transition-colors flex items-center justify-center gap-1.5 border border-surface-container-high dark:border-slate-700" onclick="shareCurrentQR()">
+                    <span class="material-symbols-outlined text-[16px]">share</span>
+                    <span>Share</span>
+                  </button>
+                  <button class="py-2 px-space-xs rounded-xl bg-surface-container-low dark:bg-slate-800 hover:bg-surface-container dark:hover:bg-slate-700 text-on-surface dark:text-slate-200 font-ui-button text-ui-button transition-colors flex items-center justify-center gap-1.5 border border-surface-container-high dark:border-slate-700" onclick="printQRSheet()">
+                    <span class="material-symbols-outlined text-[16px]">print</span>
+                    <span>Print</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="w-full text-center mt-space-sm">
+                <span class="font-label-mono-sm text-label-mono-sm text-on-surface-variant dark:text-slate-400">Target Canvas: 1024 × 1024 px • 300 DPI</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Recent Activity Shelf (Bottom Shelf) -->
+      <section id="history-shelf" class="w-full bg-surface-container-low dark:bg-slate-900/60 py-space-xl border-t border-surface-container-high/60 dark:border-slate-800">
+        <div class="max-w-[1180px] w-full mx-auto px-gutter flex flex-col gap-space-md">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="font-headline-md text-headline-md text-on-surface dark:text-white">Recent Conversions</span>
+              <span class="font-label-mono-sm text-label-mono-sm px-2 py-0.5 rounded-full bg-surface-container-high dark:bg-slate-800 text-on-surface-variant dark:text-slate-300" id="history-count-badge">Memory (4)</span>
+            </div>
+            <button class="font-ui-button text-ui-button text-on-surface-variant dark:text-slate-400 hover:text-error transition-colors flex items-center gap-1" onclick="clearAllHistory()">
+              <span class="material-symbols-outlined text-[16px]">delete_sweep</span>
+              <span>Clear History</span>
+            </button>
+          </div>
+
+          <!-- History Grid (Dynamic) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md" id="history-grid">
+            <!-- Dynamically populated from localStorage & server -->
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Modern Footer -->
+  <footer class="w-full bg-surface-container-low dark:bg-slate-900 border-t border-surface-container-high dark:border-slate-800 py-space-lg">
+    <div class="max-w-[1200px] mx-auto px-gutter flex flex-col md:flex-row items-center justify-between gap-space-md">
+      <div class="flex items-center gap-space-xs font-body-sm text-body-sm text-on-surface-variant dark:text-slate-400">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
+        <span>End-to-end encrypted • Instant QR generation • Zero tracking</span>
+      </div>
+      <div class="flex items-center gap-space-lg font-body-sm text-body-sm text-on-surface-variant dark:text-slate-400">
+        <button onclick="openApiModal()" class="hover:text-on-surface dark:hover:text-white transition-colors">Developer API</button>
+        <a class="hover:text-on-surface dark:hover:text-white transition-colors" href="#">Privacy Policy</a>
+        <a class="hover:text-on-surface dark:hover:text-white transition-colors" href="#">Terms of Service</a>
+        <span>© 2026 QRDrop Inc.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- 1. QR Camera Scanner Modal -->
+  <div id="scanner-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-surface-container-lowest dark:bg-slate-900 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-surface-container-high dark:border-slate-800 flex flex-col gap-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-secondary dark:text-indigo-400">qr_code_scanner</span>
+          <h3 class="font-headline-md text-headline-md text-on-surface dark:text-white">Scan QR Code</h3>
+        </div>
+        <button onclick="closeScannerModal()" class="p-1 rounded-lg text-on-surface-variant hover:text-on-surface dark:hover:text-white">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <!-- Video Feed / Reader -->
+      <div id="reader" class="w-full rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-950 aspect-square border border-slate-200 dark:border-slate-800 flex items-center justify-center">
+      </div>
+
+      <!-- Scan result box -->
+      <div id="scanner-result" class="hidden p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-xs text-emerald-800 dark:text-emerald-300 flex flex-col gap-1">
+        <span class="font-bold">Scanned Payload:</span>
+        <a id="scanner-result-link" href="#" target="_blank" class="truncate font-mono underline"></a>
+      </div>
+
+      <div class="flex items-center justify-between text-xs text-on-surface-variant dark:text-slate-400">
+        <span>Point camera at any QR code or upload image</span>
+        <button onclick="document.getElementById('qr-image-scanner-input').click()" class="font-semibold text-secondary dark:text-indigo-400 hover:underline">
+          Upload QR Image
+        </button>
+        <input type="file" id="qr-image-scanner-input" class="hidden" accept="image/*" onchange="scanQRFromImageFile(this)"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Batch QR Modal -->
+  <div id="batch-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-surface-container-lowest dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-surface-container-high dark:border-slate-800 flex flex-col gap-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-secondary dark:text-indigo-400">layers</span>
+          <h3 class="font-headline-md text-headline-md text-on-surface dark:text-white">Batch QR Generator</h3>
+        </div>
+        <button onclick="closeBatchModal()" class="p-1 rounded-lg text-on-surface-variant hover:text-on-surface dark:hover:text-white">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <p class="text-xs text-on-surface-variant dark:text-slate-400">
+        Enter one link or text entry per line. We'll generate a complete batch of vector QR codes instantly.
+      </p>
+      <textarea id="batch-input" rows="6" class="w-full bg-surface-container-low dark:bg-slate-800 p-3 rounded-xl font-label-mono text-xs text-on-surface dark:text-white border border-surface-container-high dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-secondary/40" placeholder="https://example.com/item1&#10;https://example.com/item2&#10;https://example.com/item3"></textarea>
+      
+      <div class="flex items-center justify-end gap-2">
+        <button onclick="closeBatchModal()" class="px-4 py-2 rounded-xl text-xs font-ui-button text-on-surface-variant dark:text-slate-400 hover:bg-surface-container dark:hover:bg-slate-800">Cancel</button>
+        <button onclick="processBatchQRs()" class="px-4 py-2 rounded-xl text-xs font-ui-button bg-primary dark:bg-indigo-600 text-white hover:bg-surface-tint">Generate Batch</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Analytics Modal -->
+  <div id="analytics-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-surface-container-lowest dark:bg-slate-900 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-surface-container-high dark:border-slate-800 flex flex-col gap-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-secondary dark:text-indigo-400">bar_chart</span>
+          <h3 class="font-headline-md text-headline-md text-on-surface dark:text-white">Scan Analytics</h3>
+        </div>
+        <button onclick="closeAnalyticsModal()" class="p-1 rounded-lg text-on-surface-variant hover:text-on-surface dark:hover:text-white">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div class="p-4 rounded-xl bg-surface-container-low dark:bg-slate-800 border border-surface-container-high dark:border-slate-700 flex flex-col">
+          <span class="text-xs text-on-surface-variant dark:text-slate-400">Total Scans</span>
+          <span class="text-2xl font-bold font-headline-md text-on-surface dark:text-white mt-1">1,063</span>
+          <span class="text-[10px] text-emerald-500 font-mono mt-1">↑ +24% this week</span>
+        </div>
+        <div class="p-4 rounded-xl bg-surface-container-low dark:bg-slate-800 border border-surface-container-high dark:border-slate-700 flex flex-col">
+          <span class="text-xs text-on-surface-variant dark:text-slate-400">Active QRs</span>
+          <span class="text-2xl font-bold font-headline-md text-on-surface dark:text-white mt-1" id="analytics-active-count">4</span>
+          <span class="text-[10px] text-secondary dark:text-indigo-400 font-mono mt-1">Live Endpoints</span>
+        </div>
+      </div>
+      <div class="p-3 rounded-xl bg-surface-container-low dark:bg-slate-800 text-xs font-mono text-on-surface-variant dark:text-slate-400 flex flex-col gap-2">
+        <div class="flex justify-between items-center">
+          <span>iOS Camera (Apple):</span>
+          <span class="text-on-surface dark:text-white font-bold">64%</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span>Android Google Lens:</span>
+          <span class="text-on-surface dark:text-white font-bold">31%</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span>Desktop/Other:</span>
+          <span class="text-on-surface dark:text-white font-bold">5%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Developer API Modal -->
+  <div id="api-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-surface-container-lowest dark:bg-slate-900 rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-surface-container-high dark:border-slate-800 flex flex-col gap-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-secondary dark:text-indigo-400">terminal</span>
+          <h3 class="font-headline-md text-headline-md text-on-surface dark:text-white">Developer API</h3>
+        </div>
+        <button onclick="closeApiModal()" class="p-1 rounded-lg text-on-surface-variant hover:text-on-surface dark:hover:text-white">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <p class="text-xs text-on-surface-variant dark:text-slate-400">
+        Upload files programmatically via REST endpoint:
+      </p>
+      <pre class="bg-slate-950 text-slate-200 p-3 rounded-xl font-mono text-[11px] overflow-x-auto">curl -X POST http://localhost:3000/api/upload \
+  -F "file=@document.pdf"</pre>
+      <p class="text-xs text-on-surface-variant dark:text-slate-400">Response returns the scannable URL and file ID:</p>
+      <pre class="bg-slate-950 text-emerald-400 p-3 rounded-xl font-mono text-[11px] overflow-x-auto">{
+  "success": true,
+  "file": {
+    "id": "8xK29m",
+    "viewUrl": "http://192.168.1.15:3000/f/8xK29m"
+  }
+}</pre>
+    </div>
+  </div>
+
+  <!-- 5. Command Palette Modal (⌘K) -->
+  <div id="cmd-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-start justify-center pt-24 p-4" onclick="if(event.target===this)closeCommandModal()">
+    <div class="bg-surface-container-lowest dark:bg-slate-900 rounded-2xl max-w-md w-full shadow-2xl border border-surface-container-high dark:border-slate-800 flex flex-col overflow-hidden">
+      <div class="flex items-center gap-2 px-4 py-3 border-b border-surface-container-high dark:border-slate-800">
+        <span class="material-symbols-outlined text-slate-400 text-[20px]">search</span>
+        <input type="text" id="cmd-input" placeholder="Type a command or jump to tab..." class="w-full bg-transparent font-body-md text-sm text-on-surface dark:text-white focus:outline-none" oninput="filterCommands(this.value)"/>
+        <kbd class="text-[10px] font-mono bg-slate-100 dark:bg-slate-800 text-slate-500 px-1.5 py-0.5 rounded">ESC</kbd>
+      </div>
+      <div class="p-2 flex flex-col gap-1 max-h-64 overflow-y-auto" id="cmd-list">
+        <button onclick="switchTab('doc'); closeCommandModal()" class="w-full text-left px-3 py-2 rounded-xl text-xs flex items-center justify-between hover:bg-surface-container dark:hover:bg-slate-800">
+          <span class="flex items-center gap-2 text-on-surface dark:text-white"><span class="material-symbols-outlined text-[16px]">description</span> Switch to Document / PDF</span>
+          <span class="text-slate-400 font-mono text-[10px]">Tab 1</span>
+        </button>
+        <button onclick="switchTab('url'); closeCommandModal()" class="w-full text-left px-3 py-2 rounded-xl text-xs flex items-center justify-between hover:bg-surface-container dark:hover:bg-slate-800">
+          <span class="flex items-center gap-2 text-on-surface dark:text-white"><span class="material-symbols-outlined text-[16px]">link</span> Switch to URL / Link</span>
+          <span class="text-slate-400 font-mono text-[10px]">Tab 2</span>
+        </button>
+        <button onclick="switchTab('photo'); closeCommandModal()" class="w-full text-left px-3 py-2 rounded-xl text-xs flex items-center justify-between hover:bg-surface-container dark:hover:bg-slate-800">
+          <span class="flex items-center gap-2 text-on-surface dark:text-white"><span class="material-symbols-outlined text-[16px]">photo_library</span> Switch to Photo / Image</span>
+          <span class="text-slate-400 font-mono text-[10px]">Tab 3</span>
+        </button>
+        <button onclick="switchTab('text'); closeCommandModal()" class="w-full text-left px-3 py-2 rounded-xl text-xs flex items-center justify-between hover:bg-surface-container dark:hover:bg-slate-800">
+          <span class="flex items-center gap-2 text-on-surface dark:text-white"><span class="material-symbols-outlined text-[16px]">notes</span> Switch to Plain Text</span>
+          <span class="text-slate-400 font-mono text-[10px]">Tab 4</span>
+        </button>
+        <button onclick="openScannerModal(); closeCommandModal()" class="w-full text-left px-3 py-2 rounded-xl text-xs flex items-center justify-between hover:bg-surface-container dark:hover:bg-slate-800">
+          <span class="flex items-center gap-2 text-on-surface dark:text-white"><span class="material-symbols-outlined text-[16px]">photo_camera</span> Open QR Camera Scanner</span>
+          <span class="text-slate-400 font-mono text-[10px]">Action</span>
+        </button>
+        <button onclick="toggleDarkMode(); closeCommandModal()" class="w-full text-left px-3 py-2 rounded-xl text-xs flex items-center justify-between hover:bg-surface-container dark:hover:bg-slate-800">
+          <span class="flex items-center gap-2 text-on-surface dark:text-white"><span class="material-symbols-outlined text-[16px]">dark_mode</span> Toggle Dark / Light Theme</span>
+          <span class="text-slate-400 font-mono text-[10px]">Theme</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast Container -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-4 py-2.5 rounded-xl shadow-2xl flex items-center gap-2 text-xs font-medium">
+    <span class="material-symbols-outlined text-[18px] text-emerald-400 dark:text-emerald-600" id="toast-icon">check_circle</span>
+    <span id="toast-message">Action completed</span>
+  </div>
+
+  <!-- App Script -->
+  <script src="/app.js"></script>
+</body>
+</html>

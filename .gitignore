@@ -1,0 +1,6 @@
+node_modules/
+uploads/*
+!uploads/.gitkeep
+.DS_Store
+*.log
+screen_80f84121.html
